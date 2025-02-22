@@ -1,12 +1,43 @@
+import { NgClass, NgFor } from '@angular/common';
 import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { RouterOutlet } from '@angular/router';
+
+export interface TodoItem {
+  id: number;
+  task: string;
+  completed: boolean;
+}
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  standalone: true,
+  imports: [RouterOutlet, FormsModule, NgFor, NgClass],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-  title = 'my-todo';
+  todoList: TodoItem[] = [];
+  newTask: string = '';
+
+  addTask(): void {
+    if (this.newTask) {
+      this.todoList.push({
+        id: this.todoList.length + 1,
+        task: this.newTask,
+        completed: false
+      });
+      this.newTask = '';
+      console.log(this.todoList);
+    }
+
+  }
+
+  toggleTask(index: number): void {
+    this.todoList[index].completed = !this.todoList[index].completed;
+  }
+
+  deleteTask(id: number): void {
+    this.todoList = this.todoList.filter(item => item.id !== id);
+  }
 }
